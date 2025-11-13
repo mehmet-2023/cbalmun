@@ -1,0 +1,251 @@
+/* Conference Details Section */
+.conference-details {
+  padding: 6rem 2rem;
+  background-color: var(--black);
+  color: var(--white);
+  font-family: var(--font-secondary);
+  position: relative;
+  overflow: hidden;
+}
+
+/* Section Divider */
+.conference-details::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, 
+    transparent, 
+    rgba(201, 162, 39, 0.3), 
+    transparent
+  );
+  margin: 0 5%;
+  width: 90%;
+}
+
+.conference-details::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, 
+    transparent, 
+    rgba(201, 162, 39, 0.3), 
+    transparent
+  );
+  margin: 0 5%;
+  width: 90%;
+}
+
+.conference-details .container {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.section-title {
+  font-family: var(--font-primary);
+  font-size: 2.5rem;
+  font-weight: 700;
+  text-align: center;
+  margin-bottom: 4rem;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  color: var(--gold);
+  position: relative;
+  padding-bottom: 1rem;
+}
+
+.section-title::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 80px;
+  height: 2px;
+  background-color: var(--gold);
+}
+
+/* Venue Section */
+.venue-section {
+  margin-bottom: 5rem;
+}
+
+.venue-section h3 {
+  font-family: var(--font-primary);
+  font-size: 1.8rem;
+  margin-bottom: 2rem;
+  color: var(--white);
+  font-weight: 600;
+}
+
+.venue-content {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 3rem;
+  align-items: center;
+}
+
+.venue-info {
+  flex: 1;
+  min-width: 300px;
+}
+
+.venue-info h4 {
+  font-size: 1.5rem;
+  margin-bottom: 1rem;
+  color: var(--gold);
+  font-weight: 600;
+}
+
+.venue-address {
+  margin-bottom: 1.5rem;
+  line-height: 1.6;
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.map-link {
+  display: inline-flex;
+  align-items: center;
+  color: var(--gold);
+  text-decoration: none;
+  font-weight: 500;
+  transition: color 0.3s ease;
+}
+
+.map-link i {
+  margin-right: 0.5rem;
+  font-size: 1.2rem;
+}
+
+.map-link:hover {
+  color: var(--light-gold);
+}
+
+.venue-map {
+  flex: 1;
+  min-width: 300px;
+  height: 300px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  overflow: hidden;
+  border-radius: 4px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.venue-map:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+}
+
+.venue-map iframe {
+  width: 100%;
+  height: 100%;
+  border: none;
+  filter: grayscale(20%) contrast(1.1);
+  transition: filter 0.3s ease;
+}
+
+.venue-map:hover iframe {
+  filter: grayscale(0%) contrast(1);
+}
+
+/* Schedule Section */
+.schedule-section h3 {
+  font-family: var(--font-primary);
+  font-size: 1.8rem;
+  margin-bottom: 2rem;
+  color: var(--white);
+  font-weight: 600;
+}
+
+.schedule-tabs {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 2rem;
+}
+
+.schedule-day {
+  background-color: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  padding: 1.5rem;
+  border-radius: 4px;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.schedule-day:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+}
+
+.schedule-day h4 {
+  font-size: 1.2rem;
+  margin-bottom: 1.5rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  color: var(--gold);
+}
+
+.events-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1.2rem;
+}
+
+.event-item {
+  display: flex;
+  gap: 1rem;
+  padding: 0.8rem 0;
+  border-bottom: 1px dashed rgba(255, 255, 255, 0.1);
+}
+
+.event-time {
+  font-weight: 600;
+  color: var(--gold);
+  min-width: 100px;
+  font-size: 0.9rem;
+}
+
+.event-title {
+  flex: 1;
+  color: rgba(255, 255, 255, 0.9);
+  font-size: 0.95rem;
+  line-height: 1.5;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .conference-details {
+    padding: 4rem 1.5rem;
+  }
+  
+  .section-title {
+    font-size: 2rem;
+    margin-bottom: 3rem;
+  }
+  
+  .venue-content {
+    flex-direction: column;
+  }
+  
+  .venue-info, .venue-image {
+    width: 100%;
+  }
+  
+  .schedule-tabs {
+    grid-template-columns: 1fr;
+  }
+  
+  .event-item {
+    flex-direction: column;
+    gap: 0.3rem;
+  }
+  
+  .event-time {
+    margin-bottom: 0.3rem;
+  }
+}
