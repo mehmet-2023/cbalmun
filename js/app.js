@@ -39,19 +39,34 @@ const TeamSection = () => {
   const [currentSlide, setCurrentSlide] = React.useState(0);
   const teamMembers = [
     {
-      name: 'Jane Doe',
-      position: 'Head of IT',
+      name: 'Travis Scott',
+      position: 'Secretary General',
       image: 'images/team1.png'
     },
     {
-      name: 'John Smith',
-      position: 'Creative Director',
+      name: 'Kanye West',
+      position: 'Director General',
       image: 'images/team2.png'
     },
     {
-      name: 'Alex Johnson',
+      name: 'Enes Batur',
       position: 'Event Coordinator',
       image: 'images/team3.png'
+    },
+    {
+      name: 'Cem Yılmaz',
+      position: 'Head Of Finance',
+      image: 'images/team4.png'
+    },
+    {
+      name: 'Bill Gates',
+      position: 'Head Of IT',
+      image: 'images/team5.png'
+    },
+    {
+      name: 'The Rock',
+      position: 'Head Of Logistics',
+      image: 'images/team6.png'
     }
   ];
 

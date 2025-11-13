@@ -1,40 +1,40 @@
 const teamMembers = [
   {
     id: 1,
-    name: 'Jane Doe',
-    position: 'Head of IT',
+    name: 'Travis Scott',
+    position: 'Secretary General',
     image: 'images/team1.png'
   },
   {
     id: 2,
-    name: 'John Smith',
-    position: 'Marketing Director',
+    name: 'Kanye West',
+    position: 'Director General',
     image: 'images/team2.png'
   },
   {
     id: 3,
-    name: 'Alex Johnson',
+    name: 'Enes Batur',
     position: 'Event Coordinator',
     image: 'images/team3.png'
   },
 
   {
     id: 4,
-    name: 'Sarah Williams',
-    position: 'Secretary General',
-    image: 'images/team1.png'
+    name: 'Cem Yılmaz',
+    position: 'Head Of Finance',
+    image: 'images/team4.png'
   },
   {
     id: 5,
-    name: 'Michael Brown',
-    position: 'Under-Secretary General',
-    image: 'images/team2.png'
+    name: 'Bill Gates',
+    position: 'Head Of IT',
+    image: 'images/team5.png'
   },
   {
     id: 6,
-    name: 'Emily Davis',
-    position: 'Head of Logistics',
-    image: 'images/team3.png'
+    name: 'The Rock',
+    position: 'Head Of Logistics',
+    image: 'images/team6.png'
   }
 ];
 
