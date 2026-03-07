@@ -51,8 +51,13 @@ module.exports = async (req, res) => {
     res.statusCode = 200;
     res.end(JSON.stringify({ ok: true }));
   } catch (e) {
-    const statusCode = e.statusCode || 500;
+    const statusCode = e.statusCode || e.status || 500;
+    const message = (e && (e.message || e.toString && e.toString())) || 'Unknown error';
     res.statusCode = statusCode;
-    res.end(JSON.stringify({ error: statusCode === 500 ? 'Failed to update' : e.message }));
+    res.end(JSON.stringify({
+      error: statusCode === 500 ? 'Failed to update' : message,
+      details: statusCode === 500 ? message : undefined,
+      statusCode,
+    }));
   }
 };
