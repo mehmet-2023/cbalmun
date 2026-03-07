@@ -20,6 +20,20 @@ async function getAllData() {
   };
 }
 
+function normalizeCommittees(value) {
+  if (!Array.isArray(value)) return [];
+  return value.map((c, idx) => ({
+    id: typeof c.id === 'number' ? c.id : (idx + 1),
+    name: c.name || '',
+    type: c.type || '',
+    description: c.description || '',
+    academicAssistant: c.academicAssistant || '',
+    underSecretaryGeneral: c.underSecretaryGeneral || '',
+    image: c.image || '',
+    studyGuideLink: c.studyGuideLink || '',
+  }));
+}
+
 async function setKey(key, value) {
   if (!Object.values(EDGE_CONFIG_KEYS).includes(key)) {
     const err = new Error('Unknown key');
@@ -67,4 +81,5 @@ module.exports = {
   EDGE_CONFIG_KEYS,
   getAllData,
   setKey,
+  normalizeCommittees,
 };

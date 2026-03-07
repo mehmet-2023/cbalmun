@@ -88,11 +88,6 @@
             <button class="admin-btn" id="btnLoad">Load Data</button>
             <button class="admin-btn secondary" id="btnSave">Save Current Tab</button>
             <div class="hint" id="authHint"></div>
-            <div class="hint">
-              - Veri Vercel <strong>Edge Config</strong>'de saklanır.
-              <br />- Bu sayfa URL'si bilmeyen için görünmez (random klasör).
-              <br />- Passphrase sadece API'ye gönderilir, sayfada saklanmaz.
-            </div>
           </div>
         </div>
 
@@ -216,15 +211,8 @@
 
     function normalizeTabData(tab, value) {
       if (tab === 'committees') {
-        return ensureArrayForTab(value).map((c, idx) => ({
-          id: typeof c.id === 'number' ? c.id : (idx + 1),
-          name: c.name || '',
-          type: c.type || '',
-          description: c.description || '',
-          academicAssistant: c.academicAssistant || '',
-          underSecretaryGeneral: c.underSecretaryGeneral || '',
-          image: c.image || '',
-        }));
+        const { normalizeCommittees } = require('../_lib/edge-config');
+        return normalizeCommittees(value);
       }
       if (tab === 'team') {
         return ensureArrayForTab(value).map((m, idx) => ({
@@ -370,6 +358,7 @@
           <div class="field"><label>Type</label><input data-k="type" value="${escapeHtml(c.type)}" /></div>
           <div class="field" style="grid-column:1/-1;"><label>Name</label><input data-k="name" value="${escapeHtml(c.name)}" /></div>
           <div class="field" style="grid-column:1/-1;"><label>Image</label><input data-k="image" value="${escapeHtml(c.image)}" placeholder="images/committees/xxx.jpg" /></div>
+          <div class="field" style="grid-column:1/-1;"><label>Study Guide Link</label><input data-k="studyGuideLink" value="${escapeHtml(c.studyGuideLink)}" placeholder="https://..." /></div>
           <div class="field"><label>Academic Assistant</label><input data-k="academicAssistant" value="${escapeHtml(c.academicAssistant)}" /></div>
           <div class="field"><label>Under Secretary General</label><input data-k="underSecretaryGeneral" value="${escapeHtml(c.underSecretaryGeneral)}" /></div>
           <div class="field" style="grid-column:1/-1;"><label>Description</label><textarea data-k="description">${escapeHtml(c.description)}</textarea></div>
@@ -722,7 +711,7 @@
       if (tab === 'committees') {
         const next = ensureArrayForTab(state.data.committees).slice();
         const nextId = next.length ? Math.max(...next.map((x) => Number(x.id) || 0)) + 1 : 1;
-        next.push({ id: nextId, name: '', type: '', description: '', academicAssistant: '', underSecretaryGeneral: '', image: '' });
+        next.push({ id: nextId, name: '', type: '', description: '', academicAssistant: '', underSecretaryGeneral: '', image: '', studyGuideLink: '' });
         state.data.committees = next;
       }
       if (tab === 'team') {

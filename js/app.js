@@ -401,6 +401,11 @@ const CommitteesPreview = () => {
                       <span className="overlay-type">{committee.type}</span>
                       <h3 className="overlay-name">{committee.name}</h3>
                       <p className="overlay-description">{committee.description}</p>
+                      {committee.studyGuideLink && (
+                        <a href={committee.studyGuideLink} target="_blank" rel="noopener noreferrer" className="overlay-study-link">
+                          <i className="fas fa-file-download"></i> Study Guide
+                        </a>
+                      )}
                     </div>
                   </div>
                 </div>

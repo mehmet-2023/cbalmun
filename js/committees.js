@@ -149,10 +149,17 @@ function CommitteesPage() {
                 </div>
               </div>
               
-              <button className="study-guide-button">
-                <i className="fas fa-file-download"></i>
-                Study Guide
-              </button>
+              {committee.studyGuideLink ? (
+                <a href={committee.studyGuideLink} target="_blank" rel="noopener noreferrer" className="study-guide-button">
+                  <i className="fas fa-file-download"></i>
+                  Study Guide
+                </a>
+              ) : (
+                <button className="study-guide-button" disabled>
+                  <i className="fas fa-file-download"></i>
+                  Study Guide
+                </button>
+              )}
             </div>
           </div>
         ))}
