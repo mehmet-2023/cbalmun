@@ -34,7 +34,34 @@
     .tab.active { background: rgba(30,58,138,0.25); border-color: rgba(30,58,138,0.45); color: var(--white); }
     .tab:hover { background: rgba(30,58,138,0.18); }
 
-    textarea { width: 100%; min-height: 480px; padding: 1rem; border-radius: 12px; border: 1px solid rgba(30,58,138,0.25); background: rgba(0,0,0,0.35); color: var(--white); font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace; font-size: 0.88rem; line-height: 1.5; }
+    .mode-tabs { display: flex; gap: 0.5rem; flex-wrap: wrap; margin-bottom: 1rem; }
+    .mode { padding: 0.5rem 0.75rem; border-radius: 999px; border: 1px solid rgba(30,58,138,0.22); background: rgba(255,255,255,0.02); color: rgba(255,255,255,0.85); cursor: pointer; font-family: var(--font-secondary); font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; font-size: 0.72rem; transition: var(--transition); }
+    .mode.active { background: rgba(30,58,138,0.25); border-color: rgba(30,58,138,0.45); color: var(--white); }
+
+    textarea { width: 100%; min-height: 420px; padding: 1rem; border-radius: 12px; border: 1px solid rgba(30,58,138,0.25); background: rgba(0,0,0,0.35); color: var(--white); font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace; font-size: 0.88rem; line-height: 1.5; }
+
+    .panel { display: none; }
+    .panel.active { display: block; }
+
+    .list { display: flex; flex-direction: column; gap: 0.75rem; }
+    .item { border: 1px solid rgba(30,58,138,0.22); border-radius: 12px; padding: 0.9rem; background: rgba(255,255,255,0.02); }
+    .item-head { display: flex; gap: 0.75rem; align-items: center; justify-content: space-between; margin-bottom: 0.75rem; }
+    .badge { font-size: 0.75rem; letter-spacing: 0.1em; text-transform: uppercase; color: rgba(255,255,255,0.7); }
+    .item-actions { display: flex; gap: 0.5rem; flex-wrap: wrap; }
+    .icon-btn { padding: 0.45rem 0.7rem; border-radius: 10px; border: 1px solid rgba(30,58,138,0.22); background: rgba(0,0,0,0.25); color: var(--white); cursor: pointer; font-family: var(--font-secondary); font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; font-size: 0.72rem; }
+    .icon-btn:hover { background: rgba(30,58,138,0.18); }
+    .icon-btn.danger { border-color: rgba(255,110,110,0.35); color: #ffb4b4; }
+
+    .grid2 { display: grid; grid-template-columns: 1fr; gap: 0.75rem; }
+    @media (min-width: 900px) { .grid2 { grid-template-columns: 1fr 1fr; } }
+    .field label { display: block; font-size: 0.75rem; letter-spacing: 0.12em; text-transform: uppercase; color: rgba(255,255,255,0.7); margin-bottom: 0.35rem; }
+    .field input, .field textarea { width: 100%; padding: 0.75rem 0.85rem; border-radius: 10px; border: 1px solid rgba(30,58,138,0.25); background: rgba(0,0,0,0.35); color: var(--white); font-family: var(--font-secondary); }
+    .field textarea { min-height: 110px; font-family: var(--font-secondary); }
+
+    .empty { padding: 1rem; border-radius: 12px; border: 1px dashed rgba(30,58,138,0.35); color: rgba(255,255,255,0.75); background: rgba(255,255,255,0.02); }
+
+    .toast { position: fixed; bottom: 16px; right: 16px; max-width: 420px; padding: 0.9rem 1rem; border-radius: 12px; border: 1px solid rgba(30,58,138,0.25); background: rgba(0,0,0,0.85); color: var(--white); font-family: var(--font-secondary); opacity: 0; transform: translateY(6px); transition: all 0.25s ease; pointer-events: none; z-index: 9999; }
+    .toast.show { opacity: 1; transform: translateY(0); }
 
     .row { display: flex; gap: 0.75rem; flex-wrap: wrap; align-items: center; justify-content: space-between; margin-top: 0.9rem; }
     .status { font-family: var(--font-secondary); font-size: 0.92rem; color: rgba(255,255,255,0.75); }
@@ -54,7 +81,7 @@
         <div class="admin-card">
           <div class="admin-login">
             <label for="pass">Passphrase</label>
-            <input id="pass" type="password" placeholder="Vercel env'deki ADMIN_PASSPHRASE" autocomplete="current-password" />
+            <input id="pass" type="password" placeholder="ADMIN_PASSPHRASE" autocomplete="current-password" />
             <button class="admin-btn" id="btnLoad">Load Data</button>
             <button class="admin-btn secondary" id="btnSave">Save Current Tab</button>
             <div class="hint">
@@ -72,20 +99,40 @@
             <button class="tab" data-tab="schedule">Schedule</button>
           </div>
 
-          <textarea id="editor" spellcheck="false"></textarea>
+          <div class="mode-tabs" style="margin-bottom:0.75rem;">
+            <button class="mode active" data-mode="form">Form</button>
+            <button class="mode" data-mode="json">Raw JSON</button>
+          </div>
 
-          <div class="row">
-            <div class="status" id="status">Status: <strong>idle</strong></div>
-            <div style="display:flex; gap:0.5rem;">
-              <button class="admin-btn secondary" id="btnFormat">Format</button>
-              <button class="admin-btn" id="btnSave2">Save</button>
+          <div id="panelForm" class="panel active">
+            <div id="emptyState" class="empty" style="display:none;"></div>
+            <div id="formRoot"></div>
+            <div class="row">
+              <div class="status" id="formStatus">Tip: <strong>Yeni öğe ekleyip alanları doldur.</strong></div>
+              <div style="display:flex; gap:0.5rem;">
+                <button class="admin-btn secondary" id="btnAdd">Add</button>
+                <button class="admin-btn" id="btnSaveForm">Save</button>
+              </div>
             </div>
           </div>
-          <div class="hint danger" id="error"></div>
+
+          <div id="panelJson" class="panel">
+            <textarea id="editor" spellcheck="false"></textarea>
+            <div class="row">
+              <div class="status" id="status">Status: <strong>idle</strong></div>
+              <div style="display:flex; gap:0.5rem;">
+                <button class="admin-btn secondary" id="btnFormat">Format</button>
+                <button class="admin-btn" id="btnSave2">Save</button>
+              </div>
+            </div>
+            <div class="hint danger" id="error"></div>
+          </div>
         </div>
       </div>
     </div>
   </div>
+
+  <div class="toast" id="toast"></div>
 
   <script>
     const $ = (sel) => document.querySelector(sel);
@@ -93,11 +140,23 @@
     const editorEl = $('#editor');
     const statusEl = $('#status');
     const errorEl = $('#error');
+    const formRootEl = $('#formRoot');
+    const emptyStateEl = $('#emptyState');
+    const toastEl = $('#toast');
+    const panelFormEl = $('#panelForm');
+    const panelJsonEl = $('#panelJson');
 
     const state = {
       tab: 'committees',
+      mode: 'form',
       data: { committees: [], team: [], schedule: [] },
     };
+
+    function toast(msg) {
+      toastEl.textContent = msg;
+      toastEl.classList.add('show');
+      setTimeout(() => toastEl.classList.remove('show'), 2200);
+    }
 
     function setStatus(text) {
       statusEl.innerHTML = `Status: <strong>${text}</strong>`;
@@ -105,6 +164,16 @@
 
     function setError(text) {
       errorEl.textContent = text || '';
+    }
+
+    function setEmpty(text) {
+      if (!text) {
+        emptyStateEl.style.display = 'none';
+        emptyStateEl.textContent = '';
+        return;
+      }
+      emptyStateEl.style.display = 'block';
+      emptyStateEl.textContent = text;
     }
 
     function getPassphrase() {
@@ -118,6 +187,420 @@
 
     function renderEditor() {
       editorEl.value = JSON.stringify(state.data[state.tab] ?? null, null, 2);
+    }
+
+    function uuid() {
+      return Math.random().toString(16).slice(2) + Math.random().toString(16).slice(2);
+    }
+
+    function ensureArrayForTab(value) {
+      if (!Array.isArray(value)) return [];
+      return value;
+    }
+
+    function normalizeTabData(tab, value) {
+      if (tab === 'committees') {
+        return ensureArrayForTab(value).map((c, idx) => ({
+          id: typeof c.id === 'number' ? c.id : (idx + 1),
+          name: c.name || '',
+          type: c.type || '',
+          description: c.description || '',
+          academicAssistant: c.academicAssistant || '',
+          underSecretaryGeneral: c.underSecretaryGeneral || '',
+          image: c.image || '',
+        }));
+      }
+      if (tab === 'team') {
+        return ensureArrayForTab(value).map((m, idx) => ({
+          id: typeof m.id === 'number' ? m.id : (idx + 1),
+          name: m.name || '',
+          position: m.position || '',
+          image: m.image || '',
+        }));
+      }
+      if (tab === 'schedule') {
+        return ensureArrayForTab(value).map((d) => ({
+          day: d.day || '',
+          events: Array.isArray(d.events) ? d.events.map((e) => ({ time: e.time || '', title: e.title || '' })) : [],
+        }));
+      }
+      return value;
+    }
+
+    function validateTabData(tab, value) {
+      const errors = [];
+      if (!Array.isArray(value)) {
+        errors.push('Veri bir dizi (array) olmalı.');
+        return errors;
+      }
+      if (tab === 'committees') {
+        value.forEach((c, i) => {
+          if (!c.name) errors.push(`Committees #${i + 1}: name gerekli`);
+          if (!c.type) errors.push(`Committees #${i + 1}: type gerekli`);
+          if (!c.description) errors.push(`Committees #${i + 1}: description gerekli`);
+          if (!c.image) errors.push(`Committees #${i + 1}: image gerekli`);
+        });
+      }
+      if (tab === 'team') {
+        value.forEach((m, i) => {
+          if (!m.name) errors.push(`Team #${i + 1}: name gerekli`);
+          if (!m.position) errors.push(`Team #${i + 1}: position gerekli`);
+          if (!m.image) errors.push(`Team #${i + 1}: image gerekli`);
+        });
+      }
+      if (tab === 'schedule') {
+        value.forEach((d, i) => {
+          if (!d.day) errors.push(`Schedule day #${i + 1}: day gerekli`);
+          if (!Array.isArray(d.events) || d.events.length === 0) errors.push(`Schedule day #${i + 1}: en az 1 event gerekli`);
+          (d.events || []).forEach((e, j) => {
+            if (!e.time) errors.push(`Schedule day #${i + 1} event #${j + 1}: time gerekli`);
+            if (!e.title) errors.push(`Schedule day #${i + 1} event #${j + 1}: title gerekli`);
+          });
+        });
+      }
+      return errors;
+    }
+
+    function setMode(mode) {
+      state.mode = mode;
+      document.querySelectorAll('.mode').forEach((b) => b.classList.remove('active'));
+      document.querySelector(`.mode[data-mode="${mode}"]`).classList.add('active');
+      if (mode === 'form') {
+        panelFormEl.classList.add('active');
+        panelJsonEl.classList.remove('active');
+        setError('');
+        renderForm();
+      } else {
+        panelJsonEl.classList.add('active');
+        panelFormEl.classList.remove('active');
+        setError('');
+        renderEditor();
+      }
+    }
+
+    function moveItem(arr, from, to) {
+      if (to < 0 || to >= arr.length) return arr;
+      const copy = arr.slice();
+      const [x] = copy.splice(from, 1);
+      copy.splice(to, 0, x);
+      return copy;
+    }
+
+    function renderForm() {
+      const data = normalizeTabData(state.tab, state.data[state.tab]);
+      state.data[state.tab] = data;
+
+      if (!data.length) {
+        setEmpty('Veri boş. "Add" ile yeni öğe ekleyebilirsin veya Raw JSON modunda hazır JSON yapıştırabilirsin.');
+      } else {
+        setEmpty('');
+      }
+
+      formRootEl.innerHTML = '';
+
+      if (state.tab === 'committees') renderCommitteesForm(data);
+      if (state.tab === 'team') renderTeamForm(data);
+      if (state.tab === 'schedule') renderScheduleForm(data);
+    }
+
+    function renderCommitteesForm(items) {
+      const list = document.createElement('div');
+      list.className = 'list';
+
+      items.forEach((c, idx) => {
+        const wrap = document.createElement('div');
+        wrap.className = 'item';
+        wrap.dataset.key = uuid();
+
+        const head = document.createElement('div');
+        head.className = 'item-head';
+
+        const left = document.createElement('div');
+        left.innerHTML = `<div class="badge">Committee #${idx + 1}</div><div style="font-weight:800; margin-top:0.15rem;">${(c.name || 'Untitled')}</div>`;
+
+        const actions = document.createElement('div');
+        actions.className = 'item-actions';
+        actions.innerHTML = `
+          <button class="icon-btn" data-act="up">Up</button>
+          <button class="icon-btn" data-act="down">Down</button>
+          <button class="icon-btn danger" data-act="remove">Remove</button>
+        `;
+
+        actions.addEventListener('click', (e) => {
+          const act = e.target?.dataset?.act;
+          if (!act) return;
+          if (act === 'remove') {
+            state.data.committees = items.filter((_, i) => i !== idx);
+            renderForm();
+          }
+          if (act === 'up') {
+            state.data.committees = moveItem(items, idx, idx - 1);
+            renderForm();
+          }
+          if (act === 'down') {
+            state.data.committees = moveItem(items, idx, idx + 1);
+            renderForm();
+          }
+        });
+
+        head.appendChild(left);
+        head.appendChild(actions);
+        wrap.appendChild(head);
+
+        const grid = document.createElement('div');
+        grid.className = 'grid2';
+        grid.innerHTML = `
+          <div class="field"><label>ID</label><input data-k="id" value="${c.id}" /></div>
+          <div class="field"><label>Type</label><input data-k="type" value="${escapeHtml(c.type)}" /></div>
+          <div class="field" style="grid-column:1/-1;"><label>Name</label><input data-k="name" value="${escapeHtml(c.name)}" /></div>
+          <div class="field" style="grid-column:1/-1;"><label>Image</label><input data-k="image" value="${escapeHtml(c.image)}" placeholder="images/committees/xxx.jpg" /></div>
+          <div class="field"><label>Academic Assistant</label><input data-k="academicAssistant" value="${escapeHtml(c.academicAssistant)}" /></div>
+          <div class="field"><label>Under Secretary General</label><input data-k="underSecretaryGeneral" value="${escapeHtml(c.underSecretaryGeneral)}" /></div>
+          <div class="field" style="grid-column:1/-1;"><label>Description</label><textarea data-k="description">${escapeHtml(c.description)}</textarea></div>
+        `;
+
+        grid.addEventListener('input', (e) => {
+          const k = e.target?.dataset?.k;
+          if (!k) return;
+          const v = e.target.value;
+          const next = items.slice();
+          if (k === 'id') next[idx][k] = Number(v) || (idx + 1);
+          else next[idx][k] = v;
+          state.data.committees = next;
+          // refresh header name live without full rerender
+          left.querySelector('div:nth-child(2)').textContent = next[idx].name || 'Untitled';
+        });
+
+        wrap.appendChild(grid);
+        list.appendChild(wrap);
+      });
+
+      formRootEl.appendChild(list);
+    }
+
+    function renderTeamForm(items) {
+      const list = document.createElement('div');
+      list.className = 'list';
+
+      items.forEach((m, idx) => {
+        const wrap = document.createElement('div');
+        wrap.className = 'item';
+
+        const head = document.createElement('div');
+        head.className = 'item-head';
+
+        const left = document.createElement('div');
+        left.innerHTML = `<div class="badge">Member #${idx + 1}</div><div style="font-weight:800; margin-top:0.15rem;">${(m.name || 'Untitled')}</div>`;
+
+        const actions = document.createElement('div');
+        actions.className = 'item-actions';
+        actions.innerHTML = `
+          <button class="icon-btn" data-act="up">Up</button>
+          <button class="icon-btn" data-act="down">Down</button>
+          <button class="icon-btn danger" data-act="remove">Remove</button>
+        `;
+
+        actions.addEventListener('click', (e) => {
+          const act = e.target?.dataset?.act;
+          if (!act) return;
+          if (act === 'remove') {
+            state.data.team = items.filter((_, i) => i !== idx);
+            renderForm();
+          }
+          if (act === 'up') {
+            state.data.team = moveItem(items, idx, idx - 1);
+            renderForm();
+          }
+          if (act === 'down') {
+            state.data.team = moveItem(items, idx, idx + 1);
+            renderForm();
+          }
+        });
+
+        head.appendChild(left);
+        head.appendChild(actions);
+        wrap.appendChild(head);
+
+        const grid = document.createElement('div');
+        grid.className = 'grid2';
+        grid.innerHTML = `
+          <div class="field"><label>ID</label><input data-k="id" value="${m.id}" /></div>
+          <div class="field"><label>Position</label><input data-k="position" value="${escapeHtml(m.position)}" /></div>
+          <div class="field" style="grid-column:1/-1;"><label>Name</label><input data-k="name" value="${escapeHtml(m.name)}" /></div>
+          <div class="field" style="grid-column:1/-1;"><label>Image</label><input data-k="image" value="${escapeHtml(m.image)}" placeholder="images/team1.png" /></div>
+        `;
+
+        grid.addEventListener('input', (e) => {
+          const k = e.target?.dataset?.k;
+          if (!k) return;
+          const v = e.target.value;
+          const next = items.slice();
+          if (k === 'id') next[idx][k] = Number(v) || (idx + 1);
+          else next[idx][k] = v;
+          state.data.team = next;
+          left.querySelector('div:nth-child(2)').textContent = next[idx].name || 'Untitled';
+        });
+
+        wrap.appendChild(grid);
+        list.appendChild(wrap);
+      });
+
+      formRootEl.appendChild(list);
+    }
+
+    function renderScheduleForm(items) {
+      const list = document.createElement('div');
+      list.className = 'list';
+
+      items.forEach((d, idx) => {
+        const wrap = document.createElement('div');
+        wrap.className = 'item';
+
+        const head = document.createElement('div');
+        head.className = 'item-head';
+
+        const left = document.createElement('div');
+        left.innerHTML = `<div class="badge">Day #${idx + 1}</div><div style="font-weight:800; margin-top:0.15rem;">${(d.day || 'Untitled')}</div>`;
+
+        const actions = document.createElement('div');
+        actions.className = 'item-actions';
+        actions.innerHTML = `
+          <button class="icon-btn" data-act="addEvent">Add Event</button>
+          <button class="icon-btn" data-act="up">Up</button>
+          <button class="icon-btn" data-act="down">Down</button>
+          <button class="icon-btn danger" data-act="remove">Remove</button>
+        `;
+
+        actions.addEventListener('click', (e) => {
+          const act = e.target?.dataset?.act;
+          if (!act) return;
+          if (act === 'remove') {
+            state.data.schedule = items.filter((_, i) => i !== idx);
+            renderForm();
+          }
+          if (act === 'up') {
+            state.data.schedule = moveItem(items, idx, idx - 1);
+            renderForm();
+          }
+          if (act === 'down') {
+            state.data.schedule = moveItem(items, idx, idx + 1);
+            renderForm();
+          }
+          if (act === 'addEvent') {
+            const next = items.slice();
+            next[idx].events = Array.isArray(next[idx].events) ? next[idx].events.slice() : [];
+            next[idx].events.push({ time: '', title: '' });
+            state.data.schedule = next;
+            renderForm();
+          }
+        });
+
+        head.appendChild(left);
+        head.appendChild(actions);
+        wrap.appendChild(head);
+
+        const dayField = document.createElement('div');
+        dayField.className = 'field';
+        dayField.style.marginBottom = '0.75rem';
+        dayField.innerHTML = `<label>Day title</label><input data-k="day" value="${escapeHtml(d.day)}" placeholder="Day 1 - April 24, 2026" />`;
+        dayField.addEventListener('input', (e) => {
+          const next = items.slice();
+          next[idx].day = e.target.value;
+          state.data.schedule = next;
+          left.querySelector('div:nth-child(2)').textContent = next[idx].day || 'Untitled';
+        });
+        wrap.appendChild(dayField);
+
+        const eventsList = document.createElement('div');
+        eventsList.className = 'list';
+        eventsList.style.gap = '0.5rem';
+
+        const events = Array.isArray(d.events) ? d.events : [];
+        if (!events.length) {
+          const empty = document.createElement('div');
+          empty.className = 'empty';
+          empty.textContent = 'Bu gün için henüz event yok. “Add Event” ile ekle.';
+          wrap.appendChild(empty);
+        }
+
+        events.forEach((ev, j) => {
+          const evWrap = document.createElement('div');
+          evWrap.className = 'item';
+          evWrap.style.padding = '0.75rem';
+
+          const evHead = document.createElement('div');
+          evHead.className = 'item-head';
+          evHead.style.marginBottom = '0.5rem';
+          evHead.innerHTML = `<div class="badge">Event #${j + 1}</div>`;
+
+          const evActions = document.createElement('div');
+          evActions.className = 'item-actions';
+          evActions.innerHTML = `
+            <button class="icon-btn" data-act="up">Up</button>
+            <button class="icon-btn" data-act="down">Down</button>
+            <button class="icon-btn danger" data-act="remove">Remove</button>
+          `;
+          evActions.addEventListener('click', (e) => {
+            const act = e.target?.dataset?.act;
+            if (!act) return;
+            const next = items.slice();
+            const evs = (Array.isArray(next[idx].events) ? next[idx].events.slice() : []);
+            if (act === 'remove') {
+              evs.splice(j, 1);
+            }
+            if (act === 'up') {
+              next[idx].events = moveItem(evs, j, j - 1);
+              state.data.schedule = next;
+              renderForm();
+              return;
+            }
+            if (act === 'down') {
+              next[idx].events = moveItem(evs, j, j + 1);
+              state.data.schedule = next;
+              renderForm();
+              return;
+            }
+            next[idx].events = evs;
+            state.data.schedule = next;
+            renderForm();
+          });
+
+          evHead.appendChild(evActions);
+          evWrap.appendChild(evHead);
+
+          const grid = document.createElement('div');
+          grid.className = 'grid2';
+          grid.innerHTML = `
+            <div class="field"><label>Time</label><input data-k="time" value="${escapeHtml(ev.time)}" placeholder="09:00 - 10:00" /></div>
+            <div class="field"><label>Title</label><input data-k="title" value="${escapeHtml(ev.title)}" placeholder="Opening Ceremony" /></div>
+          `;
+          grid.addEventListener('input', (e) => {
+            const k = e.target?.dataset?.k;
+            if (!k) return;
+            const next = items.slice();
+            next[idx].events = Array.isArray(next[idx].events) ? next[idx].events.slice() : [];
+            next[idx].events[j] = { ...next[idx].events[j], [k]: e.target.value };
+            state.data.schedule = next;
+          });
+
+          evWrap.appendChild(grid);
+          eventsList.appendChild(evWrap);
+        });
+
+        wrap.appendChild(eventsList);
+        list.appendChild(wrap);
+      });
+
+      formRootEl.appendChild(list);
+    }
+
+    function escapeHtml(str) {
+      return String(str ?? '')
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#39;');
     }
 
     function readEditorJson() {
@@ -138,12 +621,14 @@
       const json = await res.json().catch(() => ({}));
       if (!res.ok) throw new Error(json.error || 'Load failed');
       state.data = {
-        committees: json.committees ?? [],
-        team: json.team ?? [],
-        schedule: json.schedule ?? [],
+        committees: normalizeTabData('committees', json.committees ?? []),
+        team: normalizeTabData('team', json.team ?? []),
+        schedule: normalizeTabData('schedule', json.schedule ?? []),
       };
       renderEditor();
+      renderForm();
       setStatus('loaded');
+      toast('Loaded');
     }
 
     async function saveCurrent() {
@@ -178,6 +663,65 @@
 
       state.data[state.tab] = value;
       setStatus('saved');
+      toast('Saved');
+    }
+
+    async function saveFromForm() {
+      setError('');
+      const pass = getPassphrase();
+      if (!pass) {
+        setError('Passphrase gerekli.');
+        return;
+      }
+
+      const value = normalizeTabData(state.tab, state.data[state.tab]);
+      const errs = validateTabData(state.tab, value);
+      if (errs.length) {
+        setError(errs.slice(0, 8).join(' | ') + (errs.length > 8 ? ` (+${errs.length - 8})` : ''));
+        toast('Validation error');
+        return;
+      }
+
+      setStatus('saving');
+      const res = await fetch('/api/admin/update', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', ...headers() },
+        body: JSON.stringify({ key: state.tab, value }),
+      });
+      const json = await res.json().catch(() => ({}));
+      if (!res.ok) {
+        setStatus('error');
+        setError(json.error || 'Save failed');
+        toast('Save failed');
+        return;
+      }
+
+      state.data[state.tab] = value;
+      renderEditor();
+      setStatus('saved');
+      toast('Saved');
+    }
+
+    function addItemForTab(tab) {
+      if (tab === 'committees') {
+        const next = ensureArrayForTab(state.data.committees).slice();
+        const nextId = next.length ? Math.max(...next.map((x) => Number(x.id) || 0)) + 1 : 1;
+        next.push({ id: nextId, name: '', type: '', description: '', academicAssistant: '', underSecretaryGeneral: '', image: '' });
+        state.data.committees = next;
+      }
+      if (tab === 'team') {
+        const next = ensureArrayForTab(state.data.team).slice();
+        const nextId = next.length ? Math.max(...next.map((x) => Number(x.id) || 0)) + 1 : 1;
+        next.push({ id: nextId, name: '', position: '', image: '' });
+        state.data.team = next;
+      }
+      if (tab === 'schedule') {
+        const next = ensureArrayForTab(state.data.schedule).slice();
+        next.push({ day: '', events: [{ time: '', title: '' }] });
+        state.data.schedule = next;
+      }
+      renderForm();
+      toast('Added');
     }
 
     function formatJson() {
@@ -195,8 +739,14 @@
         document.querySelectorAll('.tab').forEach((b) => b.classList.remove('active'));
         btn.classList.add('active');
         state.tab = btn.dataset.tab;
+        setError('');
         renderEditor();
+        renderForm();
       });
+    });
+
+    document.querySelectorAll('.mode').forEach((btn) => {
+      btn.addEventListener('click', () => setMode(btn.dataset.mode));
     });
 
     $('#btnLoad').addEventListener('click', () => loadData().catch((e) => { setStatus('error'); setError(e.message); }));
@@ -204,8 +754,12 @@
     $('#btnSave2').addEventListener('click', () => saveCurrent());
     $('#btnFormat').addEventListener('click', () => formatJson());
 
+    $('#btnAdd').addEventListener('click', () => addItemForTab(state.tab));
+    $('#btnSaveForm').addEventListener('click', () => saveFromForm());
+
     setStatus('idle');
     renderEditor();
+    renderForm();
   </script>
 </body>
 </html>
