@@ -1,0 +1,17 @@
+{
+  "name": "cbalmun-website",
+  "version": "1.0.0",
+  "description": "Çağrıbey A.L Model United Nations 2026 Website",
+  "main": "index.html",
+  "scripts": {
+    "dev": "vercel dev",
+    "build": "echo 'No build step needed for static site'",
+    "start": "vercel dev"
+  },
+  "dependencies": {
+    "@vercel/edge-config": "^1.0.0"
+  },
+  "devDependencies": {
+    "vercel": "^37.0.0"
+  }
+}
