@@ -13,17 +13,18 @@
   <link rel="stylesheet" href="../css/components/navbar-footer.css" />
 
   <style>
-    body { padding-top: 0; }
+    html, body { background: radial-gradient(1200px 800px at 20% 10%, rgba(30,58,138,0.25), transparent 60%), radial-gradient(900px 600px at 80% 40%, rgba(59,130,246,0.18), transparent 55%), var(--black); }
+    body { padding-top: 0; color: var(--white); }
     .admin-wrap { max-width: 1100px; margin: 0 auto; padding: 3rem 1.5rem; }
     .admin-title { font-family: var(--font-primary); font-size: 2.4rem; letter-spacing: 0.06em; margin-bottom: 0.5rem; }
     .admin-sub { color: rgba(255,255,255,0.75); margin-bottom: 2rem; }
-    .admin-card { background: rgba(255,255,255,0.04); border: 1px solid rgba(30,58,138,0.18); border-radius: 14px; padding: 1.25rem; backdrop-filter: blur(10px); }
+    .admin-card { background: rgba(255,255,255,0.035); border: 1px solid rgba(30,58,138,0.22); border-radius: 14px; padding: 1.25rem; backdrop-filter: blur(10px); }
     .admin-grid { display: grid; grid-template-columns: 1fr; gap: 1rem; }
     @media (min-width: 900px) { .admin-grid { grid-template-columns: 360px 1fr; align-items: start; } }
 
     .admin-login { display: flex; flex-direction: column; gap: 0.75rem; }
     .admin-login label { font-size: 0.85rem; letter-spacing: 0.12em; text-transform: uppercase; color: rgba(255,255,255,0.75); }
-    .admin-login input { padding: 0.9rem 1rem; border-radius: 10px; border: 1px solid rgba(30,58,138,0.25); background: rgba(0,0,0,0.35); color: var(--white); font-family: var(--font-secondary); }
+    .admin-login input { padding: 0.9rem 1rem; border-radius: 10px; border: 1px solid rgba(30,58,138,0.35); background: rgba(0,0,0,0.55); color: var(--white); font-family: var(--font-secondary); }
 
     .admin-btn { display: inline-flex; align-items: center; justify-content: center; gap: 0.6rem; padding: 0.9rem 1.1rem; border-radius: 10px; border: 1px solid rgba(30,58,138,0.25); background: var(--navy); color: var(--white); cursor: pointer; font-family: var(--font-secondary); font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; transition: var(--transition); }
     .admin-btn.secondary { background: transparent; }
@@ -66,9 +67,11 @@
     .row { display: flex; gap: 0.75rem; flex-wrap: wrap; align-items: center; justify-content: space-between; margin-top: 0.9rem; }
     .status { font-family: var(--font-secondary); font-size: 0.92rem; color: rgba(255,255,255,0.75); }
     .status strong { color: var(--white); }
-    .hint { font-size: 0.85rem; color: rgba(255,255,255,0.65); margin-top: 0.75rem; }
+    .hint { font-size: 0.85rem; color: rgba(255,255,255,0.7); margin-top: 0.75rem; }
 
     .danger { color: #ffb4b4; }
+    .error-box { margin-top: 0.9rem; padding: 0.85rem 1rem; border-radius: 12px; border: 1px solid rgba(255,110,110,0.35); background: rgba(255,110,110,0.08); color: #ffd1d1; font-family: var(--font-secondary); }
+    .ok-box { margin-top: 0.9rem; padding: 0.85rem 1rem; border-radius: 12px; border: 1px solid rgba(59,130,246,0.35); background: rgba(30,58,138,0.12); color: rgba(255,255,255,0.9); font-family: var(--font-secondary); }
   </style>
 </head>
 <body>
@@ -84,6 +87,7 @@
             <input id="pass" type="password" placeholder="ADMIN_PASSPHRASE" autocomplete="current-password" />
             <button class="admin-btn" id="btnLoad">Load Data</button>
             <button class="admin-btn secondary" id="btnSave">Save Current Tab</button>
+            <div class="hint" id="authHint"></div>
             <div class="hint">
               - Veri Vercel <strong>Edge Config</strong>'de saklanır.
               <br />- Bu sayfa URL'si bilmeyen için görünmez (random klasör).
@@ -125,7 +129,7 @@
                 <button class="admin-btn" id="btnSave2">Save</button>
               </div>
             </div>
-            <div class="hint danger" id="error"></div>
+            <div class="error-box" id="error" style="display:none;"></div>
           </div>
         </div>
       </div>
@@ -145,6 +149,7 @@
     const toastEl = $('#toast');
     const panelFormEl = $('#panelForm');
     const panelJsonEl = $('#panelJson');
+    const authHintEl = $('#authHint');
 
     const state = {
       tab: 'committees',
@@ -163,7 +168,13 @@
     }
 
     function setError(text) {
-      errorEl.textContent = text || '';
+      const msg = text || '';
+      errorEl.textContent = msg;
+      errorEl.style.display = msg ? 'block' : 'none';
+
+      if (msg && /unauthorized/i.test(msg)) {
+        authHintEl.innerHTML = 'Auth: <strong>Unauthorized</strong><br/>- Vercel Project Settings → Environment Variables içinde <strong>ADMIN_PASSPHRASE</strong> set olmalı.<br/>- Buraya yazdığın passphrase ile birebir aynı olmalı.';
+      }
     }
 
     function setEmpty(text) {
@@ -178,6 +189,11 @@
 
     function getPassphrase() {
       return (passEl.value || '').trim();
+    }
+
+    function refreshAuthHint() {
+      const pass = getPassphrase();
+      authHintEl.innerHTML = pass ? 'Auth: <strong>passphrase entered</strong>' : 'Auth: <strong>enter passphrase</strong>';
     }
 
     function headers() {
@@ -757,6 +773,8 @@
     $('#btnAdd').addEventListener('click', () => addItemForTab(state.tab));
     $('#btnSaveForm').addEventListener('click', () => saveFromForm());
 
+    passEl.addEventListener('input', refreshAuthHint);
+    refreshAuthHint();
     setStatus('idle');
     renderEditor();
     renderForm();
