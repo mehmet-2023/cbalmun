@@ -18,7 +18,7 @@
   height: 1px;
   background: linear-gradient(90deg, 
     transparent, 
-    rgba(201, 162, 39, 0.3), 
+    rgba(30, 58, 138, 0.3), 
     transparent
   );
   margin: 0 5%;
@@ -34,7 +34,7 @@
   height: 1px;
   background: linear-gradient(90deg, 
     transparent, 
-    rgba(201, 162, 39, 0.3), 
+    rgba(30, 58, 138, 0.3), 
     transparent
   );
   margin: 0 5%;
@@ -54,7 +54,7 @@
   margin-bottom: 4rem;
   text-transform: uppercase;
   letter-spacing: 2px;
-  color: var(--gold);
+  color: var(--white);
   position: relative;
   padding-bottom: 1rem;
 }
@@ -67,7 +67,7 @@
   transform: translateX(-50%);
   width: 80px;
   height: 2px;
-  background-color: var(--gold);
+  background-color: var(--navy);
 }
 
 /* Venue Section */
@@ -98,7 +98,7 @@
 .venue-info h4 {
   font-size: 1.5rem;
   margin-bottom: 1rem;
-  color: var(--gold);
+  color: var(--navy);
   font-weight: 600;
 }
 
@@ -111,7 +111,7 @@
 .map-link {
   display: inline-flex;
   align-items: center;
-  color: var(--gold);
+  color: var(--navy);
   text-decoration: none;
   font-weight: 500;
   transition: color 0.3s ease;
@@ -123,7 +123,7 @@
 }
 
 .map-link:hover {
-  color: var(--light-gold);
+  color: var(--light-navy);
 }
 
 .venue-map {
@@ -187,7 +187,7 @@
   margin-bottom: 1.5rem;
   padding-bottom: 1rem;
   border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-  color: var(--gold);
+  color: var(--navy);
 }
 
 .events-list {
@@ -205,7 +205,7 @@
 
 .event-time {
   font-weight: 600;
-  color: var(--gold);
+  color: var(--navy);
   min-width: 100px;
   font-size: 0.9rem;
 }

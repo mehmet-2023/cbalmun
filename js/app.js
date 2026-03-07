@@ -6,7 +6,7 @@ const VogueCBALMUN = () => {
         <header className="header">
           <div>
             <h1 className="text main-title">ÇBALMUN</h1>
-            <p className="text subtitle">2025</p>
+            <p className="text subtitle">2026</p>
           </div>
         </header>
 
@@ -14,7 +14,7 @@ const VogueCBALMUN = () => {
           <div className="left-content">
             <div className="left-block text">
               <p className="line">Çağrıbey A.L Model United Nations</p>
-              <p className="line">24-25-26 April 2025</p>
+              <p className="line">24-25-26 April 2026</p>
               <p className="line">Istanbul, Türkiye</p>
               <p className="highlight">The future of leadership is shaped here</p>
               <div className="button-container">
@@ -37,7 +37,7 @@ const VogueCBALMUN = () => {
 
 const TeamSection = () => {
   const [currentSlide, setCurrentSlide] = React.useState(0);
-  const teamMembers = [
+  const fallbackTeamMembers = [
     {
       name: 'Travis Scott',
       position: 'Secretary General',
@@ -70,7 +70,35 @@ const TeamSection = () => {
     }
   ];
 
-  const [previousSlide, setPreviousSlide] = React.useState(teamMembers.length - 1);
+  const [teamMembers, setTeamMembers] = React.useState(fallbackTeamMembers);
+  const [loading, setLoading] = React.useState(true);
+
+  const [previousSlide, setPreviousSlide] = React.useState(fallbackTeamMembers.length - 1);
+
+  React.useEffect(() => {
+    let mounted = true;
+
+    (async () => {
+      try {
+        const res = await fetch('/api/public/team', { cache: 'no-store' });
+        if (!res.ok) return;
+        const json = await res.json();
+        if (mounted && Array.isArray(json.team) && json.team.length) {
+          setTeamMembers(json.team);
+          setPreviousSlide(json.team.length - 1);
+          setCurrentSlide(0);
+        }
+      } catch (e) {
+        // ignore
+      } finally {
+        if (mounted) setLoading(false);
+      }
+    })();
+
+    return () => {
+      mounted = false;
+    };
+  }, []);
 
   React.useEffect(() => {
     const timer = setInterval(() => {
@@ -84,6 +112,7 @@ const TeamSection = () => {
     <section id="team">
     <div className="team-section">
       <h2 className="team-title">OUR TEAM</h2>
+      {loading ? null : null}
       <div className="team-carousel">
         {teamMembers.map((member, index) => (
           <div
@@ -114,9 +143,9 @@ const TeamSection = () => {
 
 // Include ConferenceDetails component directly
 const ConferenceDetails = () => {
-  const schedule = [
+  const fallbackSchedule = [
     {
-      day: "Day 1 - April 24, 2025",
+      day: "Day 1 - April 24, 2026",
       events: [
         { time: "09:00 - 10:00", title: "Registration & Welcome Coffee" },
         { time: "10:00 - 12:30", title: "Opening Ceremony" },
@@ -127,7 +156,7 @@ const ConferenceDetails = () => {
       ]
     },
     {
-      day: "Day 2 - April 25, 2025",
+      day: "Day 2 - April 25, 2026",
       events: [
         { time: "09:30 - 11:30", title: "Committee Session III" },
         { time: "11:30 - 12:00", title: "Coffee Break" },
@@ -139,7 +168,7 @@ const ConferenceDetails = () => {
       ]
     },
     {
-      day: "Day 3 - April 26, 2025",
+      day: "Day 3 - April 26, 2026",
       events: [
         { time: "10:00 - 12:00", title: "Committee Session VII" },
         { time: "12:00 - 13:00", title: "Lunch Break" },
@@ -151,10 +180,37 @@ const ConferenceDetails = () => {
     }
   ];
 
+  const [schedule, setSchedule] = React.useState(fallbackSchedule);
+  const [loading, setLoading] = React.useState(true);
+
+  React.useEffect(() => {
+    let mounted = true;
+
+    (async () => {
+      try {
+        const res = await fetch('/api/public/schedule', { cache: 'no-store' });
+        if (!res.ok) return;
+        const json = await res.json();
+        if (mounted && Array.isArray(json.schedule) && json.schedule.length) {
+          setSchedule(json.schedule);
+        }
+      } catch (e) {
+        // ignore
+      } finally {
+        if (mounted) setLoading(false);
+      }
+    })();
+
+    return () => {
+      mounted = false;
+    };
+  }, []);
+
   return (
     <section className="conference-details" id="conference">
       <div className="container">
         <h2 className="section-title">Conference Details</h2>
+        {loading ? null : null}
         
         <div className="venue-section">
           <h3>Our Venue</h3>
@@ -210,10 +266,176 @@ const ConferenceDetails = () => {
   );
 };
 
+const CommitteesPreview = () => {
+  const [activeIndex, setActiveIndex] = React.useState(0);
+  const [isAnimating, setIsAnimating] = React.useState(false);
+  
+  const fallbackCommittees = [
+    {
+      id: 1,
+      name: 'United Nations Security Council',
+      type: 'UN Body',
+      description: 'The most powerful organ of the United Nations',
+      image: 'images/committees/unscc.jpg'
+    },
+    {
+      id: 2,
+      name: 'United Nations General Assembly',
+      type: 'UN Body',
+      description: 'The main deliberative body of the UN',
+      image: 'images/committees/unga.jpg'
+    },
+    {
+      id: 3,
+      name: 'North Atlantic Treaty Organization',
+      type: 'Regional Organization',
+      description: 'Collective defense and security alliance',
+      image: 'images/committees/nato.jpg'
+    },
+    {
+      id: 4,
+      name: 'European Union Council',
+      type: 'Regional Organization',
+      description: 'Executive branch of the European Union',
+      image: 'images/committees/euc.jpg'
+    },
+    {
+      id: 5,
+      name: 'World Health Organization',
+      type: 'Specialized Agency',
+      description: 'Global health coordination and response',
+      image: 'images/committees/who.jpg'
+    },
+    {
+      id: 6,
+      name: 'International Criminal Court',
+      type: 'Judicial Body',
+      description: 'Justice for the world\'s gravest crimes',
+      image: 'images/committees/icc.jpg'
+    }
+  ];
+
+  const [committees, setCommittees] = React.useState(fallbackCommittees);
+  const [loading, setLoading] = React.useState(true);
+
+  React.useEffect(() => {
+    let mounted = true;
+
+    (async () => {
+      try {
+        const res = await fetch('/api/public/committees', { cache: 'no-store' });
+        if (!res.ok) return;
+        const json = await res.json();
+        if (mounted && Array.isArray(json.committees) && json.committees.length) {
+          setCommittees(json.committees.map((c) => ({
+            id: c.id,
+            name: c.name,
+            type: c.type,
+            description: (c.description || '').slice(0, 60),
+            image: c.image,
+          })));
+          setActiveIndex(0);
+        }
+      } catch (e) {
+        // ignore
+      } finally {
+        if (mounted) setLoading(false);
+      }
+    })();
+
+    return () => {
+      mounted = false;
+    };
+  }, []);
+
+  React.useEffect(() => {
+    const timer = setInterval(() => {
+      if (!isAnimating) {
+        setIsAnimating(true);
+        setTimeout(() => {
+          setActiveIndex((prev) => (prev + 1) % committees.length);
+          setIsAnimating(false);
+        }, 500);
+      }
+    }, 4000);
+    return () => clearInterval(timer);
+  }, [committees.length, isAnimating]);
+
+  const handleCommitteeClick = (index) => {
+    if (!isAnimating) {
+      setIsAnimating(true);
+      setTimeout(() => {
+        setActiveIndex(index);
+        setIsAnimating(false);
+      }, 500);
+    }
+  };
+
+  return (
+    <section id="committees" className="committees-preview">
+      <div className="container">
+        <h2 className="section-title">OUR COMMITTEES</h2>
+        <p className="section-subtitle">Explore our diverse range of committees</p>
+        {loading ? null : null}
+        
+        <div className="vogue-showcase">
+          <div className="showcase-main">
+            {committees.map((committee, index) => (
+              <div
+                key={committee.id}
+                className={`showcase-item ${index === activeIndex ? 'active' : ''} ${index === (activeIndex - 1 + committees.length) % committees.length ? 'prev' : ''} ${index === (activeIndex + 1) % committees.length ? 'next' : ''}`}
+                onClick={() => handleCommitteeClick(index)}
+              >
+                <div className="showcase-image-container">
+                  <img
+                    src={committee.image}
+                    alt={committee.name}
+                    className="showcase-image"
+                    onError={(e) => {
+                      e.target.onerror = null;
+                      e.target.src = 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTAwJSIgaGVpZ2h0PSI0MDAiIHZpZXdCb3g9IjAgMCA4MDAgNDAwIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPjxkZWZzPjxsaW5lYXJHcmFkaWVudCBpZD0iZ3JhZGllbnQiIHgxPSIwJSIgeTE9IjAlIiB4Mj0iMTAwJSIgeTI9IjEwMCUiPjxzdG9wIG9mZnNldD0iMCUiIHN0b3AtY29sb3I9IiMxZTNhOGEiLz48c3RvcCBvZmZzZXQ9IjEwMCUiIHN0b3AtY29sb3I9IiMwMDAiLz48L2xpbmVhckdyYWRpZW50PjwvZGVmcz48cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSJ1cmwoI2dyYWRpZW50KSIvPjx0ZXh0IHg9IjUwJSIgeT0iNTAlIiBmb250LWZhbWlseT0iQXJpYWwiIGZvbnQtc2l6ZT0iMjQiIGZpbGw9IiNmZmZmZmYiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGR5PSIuM2VtIiBmb250LXdlaWdodD0iYm9sZCI+Q29tbWl0dGVlPC90ZXh0Pjwvc3ZnPg==';
+                    }}
+                  />
+                  <div className="showcase-overlay">
+                    <div className="overlay-content">
+                      <span className="overlay-type">{committee.type}</span>
+                      <h3 className="overlay-name">{committee.name}</h3>
+                      <p className="overlay-description">{committee.description}</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+          
+          <div className="showcase-navigation">
+            {committees.map((_, index) => (
+              <button
+                key={index}
+                className={`nav-dot ${index === activeIndex ? 'active' : ''}`}
+                onClick={() => handleCommitteeClick(index)}
+                aria-label={`Go to committee ${index + 1}`}
+              />
+            ))}
+          </div>
+        </div>
+        
+        <div className="committees-button-container">
+          <a href="committees.html" className="view-all-committees-button">
+            View All Committees
+            <i className="fas fa-arrow-right"></i>
+          </a>
+        </div>
+      </div>
+    </section>
+  );
+};
+
 const App = () => (
   <>
     <VogueCBALMUN />
     <TeamSection />
+    <CommitteesPreview />
     <ConferenceDetails />
   </>
 );

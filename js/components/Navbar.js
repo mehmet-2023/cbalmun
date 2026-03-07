@@ -14,6 +14,8 @@ const Navbar = () => {
     const currentPath = window.location.pathname;
     if (currentPath.includes('team.html')) {
       setActiveLink('team');
+    } else if (currentPath.includes('committees.html')) {
+      setActiveLink('committees');
     } else {
       const hash = window.location.hash.substring(1);
       if (hash && navLinks.some(link => link.id === hash)) {
@@ -40,10 +42,10 @@ const Navbar = () => {
   };
 
   const navLinks = [
-    { id: 'home', label: 'Home', href: 'index.html#home' },
-    { id: 'team', label: 'Team', href: 'index.html#team' },
+    { id: 'home', label: 'Home', href: 'index.html' },
+    { id: 'team', label: 'Team', href: 'team.html' },
     { id: 'conference', label: 'Conference', href: 'index.html#conference' },
-    { id: 'committees', label: 'Committees', href: 'index.html#committees' },
+    { id: 'committees', label: 'Committees', href: 'committees.html' },
     { id: 'faq', label: 'FAQ', href: 'index.html#faq' },
   ];
 
@@ -59,7 +61,8 @@ const Navbar = () => {
               {navLinks.map((link) => {
                 const isActive = activeLink === link.id ||
                                (link.id === 'home' && window.location.pathname.includes('index.html') && !window.location.hash) ||
-                               (link.id === 'team' && window.location.pathname.includes('team.html'));
+                               (link.id === 'team' && window.location.pathname.includes('team.html')) ||
+                               (link.id === 'committees' && window.location.pathname.includes('committees.html'));
 
                 return (
                   <li key={link.id}>

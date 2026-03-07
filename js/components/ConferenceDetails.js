@@ -3,7 +3,7 @@
 const ConferenceDetails = () => {
   const schedule = [
     {
-      day: "Day 1 - 24 Nisan 2025",
+      day: "Day 1 - 24 Nisan 2026",
       events: [
         { time: "09:00 - 10:00", title: "Kayıt ve Açılış Kokteyli" },
         { time: "10:00 - 12:30", title: "Açılış Töreni" },
@@ -14,7 +14,7 @@ const ConferenceDetails = () => {
       ]
     },
     {
-      day: "Day 2 - 25 Nisan 2025",
+      day: "Day 2 - 25 Nisan 2026",
       events: [
         { time: "09:30 - 11:30", title: "3. Oturum" },
         { time: "11:30 - 12:00", title: "Ara" },
@@ -26,7 +26,7 @@ const ConferenceDetails = () => {
       ]
     },
     {
-      day: "Day 3 - 26 Nisan 2025",
+      day: "Day 3 - 26 Nisan 2026",
       events: [
         { time: "10:00 - 12:00", title: "7. Oturum" },
         { time: "12:00 - 13:00", title: "Öğle Yemeği" },
@@ -92,4 +92,3 @@ const ConferenceDetails = () => {
   );
 };
 
-export default ConferenceDetails;

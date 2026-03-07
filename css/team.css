@@ -1,9 +1,9 @@
 :root {
   --black: #000000;
   --white: #ffffff;
-  --gold: #c9a227;
-  --light-gold: #e8d9a0;
-  --dark-gray: #1a1a1a;
+  --navy: #1e3a8a;
+  --light-navy: #3b82f6;
+  --dark-navy: #1e2f5f;
   --font-primary: 'Playfair Display', serif;
   --font-secondary: 'Montserrat', sans-serif;
   --transition: all 0.3s ease;
@@ -107,7 +107,7 @@ main {
   transform: translateX(-50%);
   width: 100px;
   height: 3px;
-  background-color: var(--gold);
+  background-color: var(--navy);
 }
 
 .team-grid {
@@ -125,14 +125,14 @@ main {
   overflow: hidden;
   transition: var(--transition);
   position: relative;
-  border: 1px solid rgba(201, 162, 39, 0.2);
+  border: 1px solid rgba(30, 58, 138, 0.2);
   backdrop-filter: blur(5px);
 }
 
 .team-member:hover {
   transform: translateY(-10px);
   box-shadow: 0 15px 30px rgba(0, 0, 0, 0.3);
-  border-color: var(--gold);
+  border-color: var(--navy);
 }
 
 .team-member img {
@@ -163,7 +163,7 @@ main {
 }
 
 .member-role {
-  color: var(--gold);
+  color: var(--navy);
   font-size: 0.9rem;
   text-transform: uppercase;
   letter-spacing: 0.2em;
@@ -181,7 +181,7 @@ main {
   text-transform: uppercase;
   color: var(--white);
   background-color: transparent;
-  border: 2px solid var(--gold);
+  border: 2px solid var(--navy);
   border-radius: 2px;
   text-decoration: none;
   transition: var(--transition);
@@ -199,7 +199,7 @@ main {
   left: -100%;
   width: 100%;
   height: 100%;
-  background: var(--gold);
+  background: var(--navy);
   transition: var(--transition);
   z-index: -1;
 }

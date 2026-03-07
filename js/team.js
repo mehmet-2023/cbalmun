@@ -1,4 +1,4 @@
-const teamMembers = [
+const fallbackTeamMembers = [
   {
     id: 1,
     name: 'Travis Scott',
@@ -39,9 +39,36 @@ const teamMembers = [
 ];
 
 function TeamPage() {
+  const [teamMembers, setTeamMembers] = React.useState(fallbackTeamMembers);
+  const [loading, setLoading] = React.useState(true);
+
+  React.useEffect(() => {
+    let mounted = true;
+
+    (async () => {
+      try {
+        const res = await fetch('/api/public/team', { cache: 'no-store' });
+        if (!res.ok) return;
+        const json = await res.json();
+        if (mounted && Array.isArray(json.team) && json.team.length) {
+          setTeamMembers(json.team);
+        }
+      } catch (e) {
+        // ignore and keep fallback
+      } finally {
+        if (mounted) setLoading(false);
+      }
+    })();
+
+    return () => {
+      mounted = false;
+    };
+  }, []);
+
   return (
     <div className="team-page">
       <h1 className="team-page-title">Our Team</h1>
+      {loading ? null : null}
       <div className="team-grid">
         {teamMembers.map((member) => (
           <div key={member.id} className="team-member">

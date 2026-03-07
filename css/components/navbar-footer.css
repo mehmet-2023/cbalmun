@@ -44,7 +44,7 @@ main {
 }
 
 .logo:hover {
-  color: var(--gold);
+  color: var(--navy);
 }
 .desktop-nav ul {
   display: flex;
@@ -77,18 +77,16 @@ main {
   height: 2px;
   bottom: 0;
   left: 0;
-  background-color: var(--gold);
+  background-color: var(--navy);
   transition: width 0.3s ease;
 }
 
-.desktop-nav a:hover,
-.desktop-nav ul li a {
-  position: relative;
-  padding-bottom: 5px;
+.desktop-nav a:hover {
+  color: var(--navy);
 }
 
 .desktop-nav ul li a.active {
-  color: var(--gold);
+  color: var(--navy);
   font-weight: 600;
 }
 
@@ -100,7 +98,7 @@ main {
   transform: translateX(-50%);
   width: 20px;
   height: 2px;
-  background-color: var(--gold);
+  background-color: var(--navy);
   border-radius: 2px;
 }
 
@@ -208,13 +206,16 @@ main {
   left: 0;
   width: 0;
   height: 2px;
-  background-color: var(--gold);
+  background-color: var(--navy);
   transition: width 0.3s ease;
 }
 
-.mobile-nav a:hover,
+.mobile-nav a:hover {
+  color: var(--navy);
+}
+
 .mobile-nav a.active {
-  color: var(--gold);
+  color: var(--navy);
 }
 
 .mobile-nav a:hover::after,
