@@ -211,8 +211,18 @@
 
     function normalizeTabData(tab, value) {
       if (tab === 'committees') {
-        const { normalizeCommittees } = require('../_lib/edge-config');
-        return normalizeCommittees(value);
+        // Inline normalizeCommittees for browser environment
+        if (!Array.isArray(value)) return [];
+        return value.map((c, idx) => ({
+          id: typeof c.id === 'number' ? c.id : (idx + 1),
+          name: c.name || '',
+          type: c.type || '',
+          description: c.description || '',
+          academicAssistant: c.academicAssistant || '',
+          underSecretaryGeneral: c.underSecretaryGeneral || '',
+          image: c.image || '',
+          studyGuideLink: c.studyGuideLink || '',
+        }));
       }
       if (tab === 'team') {
         return ensureArrayForTab(value).map((m, idx) => ({
