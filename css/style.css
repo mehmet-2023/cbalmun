@@ -458,6 +458,96 @@ body {
   transform: translateY(-1px);
 }
 
+.apply-section {
+  padding: 6rem 1.5rem;
+  background: var(--black);
+  color: var(--white);
+}
+
+.apply-section .section-title {
+  font-family: var(--font-primary);
+  font-size: 4rem;
+  font-weight: 900;
+  text-align: center;
+  margin-bottom: 1rem;
+  color: var(--white);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.apply-section .section-subtitle {
+  font-family: var(--font-secondary);
+  font-size: 1.2rem;
+  text-align: center;
+  margin-bottom: 4rem;
+  color: rgba(255,255,255,0.75);
+}
+
+.applications-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 2rem;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.application-card {
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(30,58,138,0.22);
+  border-radius: 16px;
+  padding: 2rem;
+  text-align: center;
+  transition: all 0.3s ease;
+  backdrop-filter: blur(10px);
+}
+
+.application-card:hover {
+  transform: translateY(-4px);
+  border-color: rgba(30,58,138,0.45);
+  box-shadow: 0 12px 30px rgba(30,58,138,0.2);
+}
+
+.application-title {
+  font-family: var(--font-primary);
+  font-size: 1.6rem;
+  font-weight: 700;
+  margin-bottom: 1rem;
+  color: var(--white);
+}
+
+.application-description {
+  font-family: var(--font-secondary);
+  font-size: 0.95rem;
+  line-height: 1.6;
+  margin-bottom: 2rem;
+  color: rgba(255,255,255,0.85);
+}
+
+.apply-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.9rem 2rem;
+  font-family: var(--font-secondary);
+  font-size: 0.9rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--white);
+  background-color: var(--navy);
+  border: none;
+  border-radius: 8px;
+  text-decoration: none;
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+
+.apply-button:hover {
+  background-color: var(--light-navy);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(30,58,138,0.3);
+}
+
 .showcase-navigation {
   display: flex;
   justify-content: center;

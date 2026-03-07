@@ -46,7 +46,7 @@ const Navbar = () => {
     { id: 'team', label: 'Team', href: 'team.html' },
     { id: 'conference', label: 'Conference', href: 'index.html#conference' },
     { id: 'committees', label: 'Committees', href: 'committees.html' },
-    { id: 'faq', label: 'FAQ', href: 'index.html#faq' },
+    { id: 'apply', label: 'Apply', href: 'index.html#apply' },
   ];
 
   return (

@@ -4,20 +4,33 @@ const EDGE_CONFIG_KEYS = {
   committees: 'committees',
   team: 'team',
   schedule: 'schedule',
+  applications: 'applications',
 };
 
 async function getAllData() {
-  const [committees, team, schedule] = await Promise.all([
+  const [committees, team, schedule, applications] = await Promise.all([
     get(EDGE_CONFIG_KEYS.committees),
     get(EDGE_CONFIG_KEYS.team),
     get(EDGE_CONFIG_KEYS.schedule),
+    get(EDGE_CONFIG_KEYS.applications),
   ]);
 
   return {
     committees: committees ?? null,
     team: team ?? null,
     schedule: schedule ?? null,
+    applications: applications ?? null,
   };
+}
+
+function normalizeApplications(value) {
+  if (!Array.isArray(value)) return [];
+  return value.map((a, idx) => ({
+    id: typeof a.id === 'number' ? a.id : (idx + 1),
+    title: a.title || '',
+    description: a.description || '',
+    link: a.link || '',
+  }));
 }
 
 function normalizeCommittees(value) {
@@ -82,4 +95,5 @@ module.exports = {
   getAllData,
   setKey,
   normalizeCommittees,
+  normalizeApplications,
 };

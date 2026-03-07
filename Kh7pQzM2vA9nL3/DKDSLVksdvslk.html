@@ -96,6 +96,7 @@
             <button class="tab active" data-tab="committees">Committees</button>
             <button class="tab" data-tab="team">Team</button>
             <button class="tab" data-tab="schedule">Schedule</button>
+            <button class="tab" data-tab="applications">Applications</button>
           </div>
 
           <div class="mode-tabs" style="margin-bottom:0.75rem;">
@@ -149,7 +150,7 @@
     const state = {
       tab: 'committees',
       mode: 'form',
-      data: { committees: [], team: [], schedule: [] },
+      data: { committees: [], team: [], schedule: [], applications: [] },
     };
 
     function toast(msg) {
@@ -238,6 +239,16 @@
           events: Array.isArray(d.events) ? d.events.map((e) => ({ time: e.time || '', title: e.title || '' })) : [],
         }));
       }
+      if (tab === 'applications') {
+        // Inline normalizeApplications for browser environment
+        if (!Array.isArray(value)) return [];
+        return value.map((a, idx) => ({
+          id: typeof a.id === 'number' ? a.id : (idx + 1),
+          title: a.title || '',
+          description: a.description || '',
+          link: a.link || '',
+        }));
+      }
       return value;
     }
 
@@ -270,6 +281,13 @@
             if (!e.time) errors.push(`Schedule day #${i + 1} event #${j + 1}: time gerekli`);
             if (!e.title) errors.push(`Schedule day #${i + 1} event #${j + 1}: title gerekli`);
           });
+        });
+      }
+      if (tab === 'applications') {
+        value.forEach((a, i) => {
+          if (!a.title) errors.push(`Applications #${i + 1}: title gerekli`);
+          if (!a.description) errors.push(`Applications #${i + 1}: description gerekli`);
+          if (!a.link) errors.push(`Applications #${i + 1}: link gerekli`);
         });
       }
       return errors;
@@ -315,6 +333,7 @@
       if (state.tab === 'committees') renderCommitteesForm(data);
       if (state.tab === 'team') renderTeamForm(data);
       if (state.tab === 'schedule') renderScheduleForm(data);
+      if (state.tab === 'applications') renderApplicationsForm(data);
     }
 
     function renderCommitteesForm(items) {
@@ -609,6 +628,76 @@
       formRootEl.appendChild(list);
     }
 
+    function renderApplicationsForm(items) {
+      const list = document.createElement('div');
+      list.className = 'list';
+
+      items.forEach((a, idx) => {
+        const wrap = document.createElement('div');
+        wrap.className = 'item';
+
+        const head = document.createElement('div');
+        head.className = 'item-head';
+
+        const left = document.createElement('div');
+        left.innerHTML = `<div class="badge">Application #${idx + 1}</div><div style="font-weight:800; margin-top:0.15rem;">${(a.title || 'Untitled')}</div>`;
+
+        const actions = document.createElement('div');
+        actions.className = 'item-actions';
+        actions.innerHTML = `
+          <button class="icon-btn" data-act="up">Up</button>
+          <button class="icon-btn" data-act="down">Down</button>
+          <button class="icon-btn danger" data-act="remove">Remove</button>
+        `;
+
+        actions.addEventListener('click', (e) => {
+          const act = e.target?.dataset?.act;
+          if (!act) return;
+          if (act === 'remove') {
+            state.data.applications = items.filter((_, i) => i !== idx);
+            renderForm();
+          }
+          if (act === 'up') {
+            state.data.applications = moveItem(items, idx, idx - 1);
+            renderForm();
+          }
+          if (act === 'down') {
+            state.data.applications = moveItem(items, idx, idx + 1);
+            renderForm();
+          }
+        });
+
+        head.appendChild(left);
+        head.appendChild(actions);
+        wrap.appendChild(head);
+
+        const grid = document.createElement('div');
+        grid.className = 'grid2';
+        grid.innerHTML = `
+          <div class="field"><label>ID</label><input data-k="id" value="${a.id}" /></div>
+          <div class="field"><label>Title</label><input data-k="title" value="${escapeHtml(a.title)}" /></div>
+          <div class="field" style="grid-column:1/-1;"><label>Description</label><textarea data-k="description">${escapeHtml(a.description)}</textarea></div>
+          <div class="field" style="grid-column:1/-1;"><label>Link</label><input data-k="link" value="${escapeHtml(a.link)}" placeholder="https://forms.google.com/..." /></div>
+        `;
+
+        grid.addEventListener('input', (e) => {
+          const k = e.target?.dataset?.k;
+          if (!k) return;
+          const v = e.target.value;
+          const next = items.slice();
+          if (k === 'id') next[idx][k] = Number(v) || (idx + 1);
+          else next[idx][k] = v;
+          state.data.applications = next;
+          left.querySelector('div:nth-child(2)').textContent = next[idx].title || 'Untitled';
+        });
+
+        wrap.appendChild(grid);
+        list.appendChild(wrap);
+      });
+
+      formRootEl.appendChild(list);
+    }
+
     function escapeHtml(str) {
       return String(str ?? '')
         .replace(/&/g, '&amp;')
@@ -639,6 +728,7 @@
         committees: normalizeTabData('committees', json.committees ?? []),
         team: normalizeTabData('team', json.team ?? []),
         schedule: normalizeTabData('schedule', json.schedule ?? []),
+        applications: normalizeTabData('applications', json.applications ?? []),
       };
       renderEditor();
       renderForm();
@@ -734,6 +824,12 @@
         const next = ensureArrayForTab(state.data.schedule).slice();
         next.push({ day: '', events: [{ time: '', title: '' }] });
         state.data.schedule = next;
+      }
+      if (tab === 'applications') {
+        const next = ensureArrayForTab(state.data.applications).slice();
+        const nextId = next.length ? Math.max(...next.map((x) => Number(x.id) || 0)) + 1 : 1;
+        next.push({ id: nextId, title: '', description: '', link: '' });
+        state.data.applications = next;
       }
       renderForm();
       toast('Added');

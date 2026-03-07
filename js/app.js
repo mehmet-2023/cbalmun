@@ -436,11 +436,63 @@ const CommitteesPreview = () => {
   );
 };
 
+const ApplySection = () => {
+  const [applications, setApplications] = React.useState([]);
+  const [loading, setLoading] = React.useState(true);
+
+  React.useEffect(() => {
+    let mounted = true;
+
+    (async () => {
+      try {
+        const res = await fetch('/api/public/applications', { cache: 'no-store' });
+        if (!res.ok) return;
+        const json = await res.json();
+        if (mounted && Array.isArray(json.applications) && json.applications.length) {
+          setApplications(json.applications);
+        }
+      } catch (e) {
+        // ignore and keep empty
+      } finally {
+        if (mounted) setLoading(false);
+      }
+    })();
+
+    return () => {
+      mounted = false;
+    };
+  }, []);
+
+  return (
+    <section id="apply" className="apply-section">
+      <div className="container">
+        <h2 className="section-title">Apply to CBALMUN 2026</h2>
+        <p className="section-subtitle">Choose your application type and submit your form</p>
+        {loading ? null : (
+          <div className="applications-grid">
+            {applications.map((app, idx) => (
+              <div key={idx} className="application-card">
+                <h3 className="application-title">{app.title}</h3>
+                <p className="application-description">{app.description}</p>
+                <a href={app.link} target="_blank" rel="noopener noreferrer" className="apply-button">
+                  Apply Now
+                  <i className="fas fa-arrow-right"></i>
+                </a>
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
+    </section>
+  );
+};
+
 const App = () => (
   <>
     <VogueCBALMUN />
     <TeamSection />
     <CommitteesPreview />
     <ConferenceDetails />
+    <ApplySection />
   </>
 );
