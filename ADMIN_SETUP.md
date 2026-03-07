@@ -11,6 +11,11 @@ Keep this URL private.
 ## 2) Vercel Edge Config
 Create an **Edge Config** in Vercel and connect it to this project.
 
+Important:
+
+- Do **not** rename the environment variable when connecting Edge Config.
+- The `@vercel/edge-config` SDK is **read-only**. Writes are done via the **Vercel REST API**.
+
 Create (or plan to manage) these keys in Edge Config:
 
 - `committees` (array)
@@ -40,6 +45,12 @@ Edge Config variables (provided by Vercel when you connect Edge Config):
 - `VERCEL_EDGE_CONFIG_TOKEN`
 
 Note: `@vercel/edge-config` uses these automatically.
+
+Write access (required for admin panel Save):
+
+- `VERCEL_API_TOKEN`
+  - A Vercel **Access Token** with permission to update Edge Config
+  - Used by the serverless endpoint `POST /api/admin/update`
 
 ## 4) How to use the admin panel
 1. Open `Kh7pQzM2vA9nL3/DKDSLVksdvslk.html`
