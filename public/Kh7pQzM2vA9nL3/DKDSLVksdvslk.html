@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Admin Panel</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;700&family=Playfair+Display:wght@400;700;900&display=swap" rel="stylesheet" />
+
+  <link rel="stylesheet" href="../css/style.css" />
+  <link rel="stylesheet" href="../css/components/navbar-footer.css" />
+
+  <style>
+    body { padding-top: 0; }
+    .admin-wrap { max-width: 1100px; margin: 0 auto; padding: 3rem 1.5rem; }
+    .admin-title { font-family: var(--font-primary); font-size: 2.4rem; letter-spacing: 0.06em; margin-bottom: 0.5rem; }
+    .admin-sub { color: rgba(255,255,255,0.75); margin-bottom: 2rem; }
+    .admin-card { background: rgba(255,255,255,0.04); border: 1px solid rgba(30,58,138,0.18); border-radius: 14px; padding: 1.25rem; backdrop-filter: blur(10px); }
+    .admin-grid { display: grid; grid-template-columns: 1fr; gap: 1rem; }
+    @media (min-width: 900px) { .admin-grid { grid-template-columns: 360px 1fr; align-items: start; } }
+
+    .admin-login { display: flex; flex-direction: column; gap: 0.75rem; }
+    .admin-login label { font-size: 0.85rem; letter-spacing: 0.12em; text-transform: uppercase; color: rgba(255,255,255,0.75); }
+    .admin-login input { padding: 0.9rem 1rem; border-radius: 10px; border: 1px solid rgba(30,58,138,0.25); background: rgba(0,0,0,0.35); color: var(--white); font-family: var(--font-secondary); }
+
+    .admin-btn { display: inline-flex; align-items: center; justify-content: center; gap: 0.6rem; padding: 0.9rem 1.1rem; border-radius: 10px; border: 1px solid rgba(30,58,138,0.25); background: var(--navy); color: var(--white); cursor: pointer; font-family: var(--font-secondary); font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; transition: var(--transition); }
+    .admin-btn.secondary { background: transparent; }
+    .admin-btn:hover { background: var(--light-navy); transform: translateY(-1px); }
+
+    .tabs { display: flex; gap: 0.5rem; flex-wrap: wrap; margin-bottom: 1rem; }
+    .tab { padding: 0.6rem 0.9rem; border-radius: 999px; border: 1px solid rgba(30,58,138,0.25); background: rgba(255,255,255,0.03); color: rgba(255,255,255,0.85); cursor: pointer; font-family: var(--font-secondary); font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; font-size: 0.8rem; transition: var(--transition); }
+    .tab.active { background: rgba(30,58,138,0.25); border-color: rgba(30,58,138,0.45); color: var(--white); }
+    .tab:hover { background: rgba(30,58,138,0.18); }
+
+    textarea { width: 100%; min-height: 480px; padding: 1rem; border-radius: 12px; border: 1px solid rgba(30,58,138,0.25); background: rgba(0,0,0,0.35); color: var(--white); font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace; font-size: 0.88rem; line-height: 1.5; }
+
+    .row { display: flex; gap: 0.75rem; flex-wrap: wrap; align-items: center; justify-content: space-between; margin-top: 0.9rem; }
+    .status { font-family: var(--font-secondary); font-size: 0.92rem; color: rgba(255,255,255,0.75); }
+    .status strong { color: var(--white); }
+    .hint { font-size: 0.85rem; color: rgba(255,255,255,0.65); margin-top: 0.75rem; }
+
+    .danger { color: #ffb4b4; }
+  </style>
+</head>
+<body>
+  <div class="admin-wrap">
+    <div class="admin-card">
+      <div class="admin-title">Admin Panel</div>
+      <div class="admin-sub">Committees / Team / Schedule verilerini düzenleyip kaydedebilirsin.</div>
+
+      <div class="admin-grid">
+        <div class="admin-card">
+          <div class="admin-login">
+            <label for="pass">Passphrase</label>
+            <input id="pass" type="password" placeholder="Vercel env'deki ADMIN_PASSPHRASE" autocomplete="current-password" />
+            <button class="admin-btn" id="btnLoad">Load Data</button>
+            <button class="admin-btn secondary" id="btnSave">Save Current Tab</button>
+            <div class="hint">
+              - Veri Vercel <strong>Edge Config</strong>'de saklanır.
+              <br />- Bu sayfa URL'si bilmeyen için görünmez (random klasör).
+              <br />- Passphrase sadece API'ye gönderilir, sayfada saklanmaz.
+            </div>
+          </div>
+        </div>
+
+        <div class="admin-card">
+          <div class="tabs">
+            <button class="tab active" data-tab="committees">Committees</button>
+            <button class="tab" data-tab="team">Team</button>
+            <button class="tab" data-tab="schedule">Schedule</button>
+          </div>
+
+          <textarea id="editor" spellcheck="false"></textarea>
+
+          <div class="row">
+            <div class="status" id="status">Status: <strong>idle</strong></div>
+            <div style="display:flex; gap:0.5rem;">
+              <button class="admin-btn secondary" id="btnFormat">Format</button>
+              <button class="admin-btn" id="btnSave2">Save</button>
+            </div>
+          </div>
+          <div class="hint danger" id="error"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const $ = (sel) => document.querySelector(sel);
+    const passEl = $('#pass');
+    const editorEl = $('#editor');
+    const statusEl = $('#status');
+    const errorEl = $('#error');
+
+    const state = {
+      tab: 'committees',
+      data: { committees: [], team: [], schedule: [] },
+    };
+
+    function setStatus(text) {
+      statusEl.innerHTML = `Status: <strong>${text}</strong>`;
+    }
+
+    function setError(text) {
+      errorEl.textContent = text || '';
+    }
+
+    function getPassphrase() {
+      return (passEl.value || '').trim();
+    }
+
+    function headers() {
+      const pass = getPassphrase();
+      return pass ? { 'x-admin-passphrase': pass } : {};
+    }
+
+    function renderEditor() {
+      editorEl.value = JSON.stringify(state.data[state.tab] ?? null, null, 2);
+    }
+
+    function readEditorJson() {
+      return JSON.parse(editorEl.value);
+    }
+
+    async function loadData() {
+      setError('');
+      setStatus('loading');
+      const pass = getPassphrase();
+      if (!pass) {
+        setStatus('error');
+        setError('Passphrase gerekli.');
+        return;
+      }
+
+      const res = await fetch('/api/admin/get', { headers: headers() });
+      const json = await res.json().catch(() => ({}));
+      if (!res.ok) throw new Error(json.error || 'Load failed');
+      state.data = {
+        committees: json.committees ?? [],
+        team: json.team ?? [],
+        schedule: json.schedule ?? [],
+      };
+      renderEditor();
+      setStatus('loaded');
+    }
+
+    async function saveCurrent() {
+      setError('');
+      const pass = getPassphrase();
+      if (!pass) {
+        setError('Passphrase gerekli.');
+        return;
+      }
+
+      let value;
+      try {
+        value = readEditorJson();
+      } catch (e) {
+        setError('JSON hatalı: ' + e.message);
+        return;
+      }
+
+      setStatus('saving');
+      const res = await fetch('/api/admin/update', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', ...headers() },
+        body: JSON.stringify({ key: state.tab, value }),
+      });
+
+      const json = await res.json().catch(() => ({}));
+      if (!res.ok) {
+        setStatus('error');
+        setError(json.error || 'Save failed');
+        return;
+      }
+
+      state.data[state.tab] = value;
+      setStatus('saved');
+    }
+
+    function formatJson() {
+      setError('');
+      try {
+        const obj = readEditorJson();
+        editorEl.value = JSON.stringify(obj, null, 2);
+      } catch (e) {
+        setError('JSON hatalı: ' + e.message);
+      }
+    }
+
+    document.querySelectorAll('.tab').forEach((btn) => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.tab').forEach((b) => b.classList.remove('active'));
+        btn.classList.add('active');
+        state.tab = btn.dataset.tab;
+        renderEditor();
+      });
+    });
+
+    $('#btnLoad').addEventListener('click', () => loadData().catch((e) => { setStatus('error'); setError(e.message); }));
+    $('#btnSave').addEventListener('click', () => saveCurrent());
+    $('#btnSave2').addEventListener('click', () => saveCurrent());
+    $('#btnFormat').addEventListener('click', () => formatJson());
+
+    setStatus('idle');
+    renderEditor();
+  </script>
+</body>
+</html>
