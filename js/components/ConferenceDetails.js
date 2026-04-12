@@ -47,7 +47,7 @@ const ConferenceDetails = () => {
           <h3>Our Venue</h3>
           <div className="venue-content">
             <div className="venue-info">
-              <h4>Çağrıbey Anadolu Lisesi</h4>
+              <h4>Çağrıbey Anatolian Highschool</h4>
               <p className="venue-address">
                 Yıldız Mahallesi, 17001 Çekirge/Çanakkale Merkez/Çanakkale
               </p>
