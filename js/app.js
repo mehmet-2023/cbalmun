@@ -145,7 +145,7 @@ const TeamSection = () => {
 const ConferenceDetails = () => {
   const fallbackSchedule = [
     {
-      day: "Day 1 - April 24, 2026",
+      day: "Day 1 - May 22, 2026",
       events: [
         { time: "09:00 - 10:00", title: "Registration & Welcome Coffee" },
         { time: "10:00 - 12:30", title: "Opening Ceremony" },
@@ -156,7 +156,7 @@ const ConferenceDetails = () => {
       ]
     },
     {
-      day: "Day 2 - April 25, 2026",
+      day: "Day 2 - May 23, 2026",
       events: [
         { time: "09:30 - 11:30", title: "Committee Session III" },
         { time: "11:30 - 12:00", title: "Coffee Break" },
@@ -168,7 +168,7 @@ const ConferenceDetails = () => {
       ]
     },
     {
-      day: "Day 3 - April 26, 2026",
+      day: "Day 3 - May 24, 2026",
       events: [
         { time: "10:00 - 12:00", title: "Committee Session VII" },
         { time: "12:00 - 13:00", title: "Lunch Break" },
