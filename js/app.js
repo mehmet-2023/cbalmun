@@ -13,10 +13,10 @@ const VogueCBALMUN = () => {
         <div className="main-content">
           <div className="left-content">
             <div className="left-block text">
-              <p className="line">Çağrıbey A.L Model United Nations</p>
-              <p className="line">24-25-26 April 2026</p>
+              <p className="line">Çağrıbey Anatolian Highschool Model United Nations</p>
+              <p className="line">22-23-24 May 2026</p>
               <p className="line">Istanbul, Türkiye</p>
-              <p className="highlight">The future of leadership is shaped here</p>
+              <p className="highlight">Fashioning the Future of Diplomacy</p>
               <div className="button-container">
                 <a href="#apply" className="apply-button">Apply Now</a>
               </div>
@@ -27,7 +27,7 @@ const VogueCBALMUN = () => {
             <div className="number">3</div>
             <p className="number-text">day summit</p>
             <p className="number-text">Istanbul</p>
-            <p className="number-text">24-26 april</p>
+            <p className="number-text">22-23-24 May</p>
           </div>
         </div>
       </div>
