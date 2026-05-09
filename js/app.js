@@ -525,7 +525,7 @@ const App = () => (
     <TeamSection />
     <CommitteesPreview />
     <ConferenceDetails />
-    <LetterFromSecretaryGeneral />
     <ApplySection />
+    <LetterFromSecretaryGeneral />
   </>
 );
