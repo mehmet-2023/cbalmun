@@ -548,6 +548,129 @@ body {
   box-shadow: 0 8px 20px rgba(30,58,138,0.3);
 }
 
+.letter-section {
+  padding: 6rem 2rem;
+  background: linear-gradient(rgba(0, 0, 0, 0.85), rgba(0, 0, 0, 0.9));
+  position: relative;
+  overflow: hidden;
+}
+
+.letter-section::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: url('../images/okul.jpeg') no-repeat center center;
+  background-size: cover;
+  opacity: 0.08;
+  z-index: -1;
+}
+
+.letter-section .container {
+  max-width: 900px;
+  margin: 0 auto;
+  position: relative;
+  z-index: 1;
+}
+
+.letter-section .section-title {
+  font-family: var(--font-primary);
+  font-size: 3.5rem;
+  text-align: center;
+  margin-bottom: 1rem;
+  color: var(--white);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  position: relative;
+  padding-bottom: 1rem;
+}
+
+.letter-section .section-title::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 80px;
+  height: 3px;
+  background-color: var(--navy);
+}
+
+.letter-content {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(30, 58, 138, 0.2);
+  border-radius: 16px;
+  padding: 3rem 4rem;
+  backdrop-filter: blur(10px);
+  margin-top: 3rem;
+  position: relative;
+}
+
+.letter-content::before {
+  content: '"';
+  position: absolute;
+  top: 1rem;
+  left: 2rem;
+  font-family: var(--font-primary);
+  font-size: 6rem;
+  color: var(--navy);
+  opacity: 0.3;
+  line-height: 1;
+}
+
+.letter-text {
+  position: relative;
+  z-index: 1;
+}
+
+.letter-greeting {
+  font-family: var(--font-primary);
+  font-size: 1.4rem;
+  font-style: italic;
+  color: var(--navy);
+  margin-bottom: 2rem;
+  line-height: 1.6;
+}
+
+.letter-paragraph {
+  font-family: var(--font-secondary);
+  font-size: 1.05rem;
+  line-height: 1.8;
+  color: rgba(255, 255, 255, 0.9);
+  margin-bottom: 1.5rem;
+  text-align: justify;
+}
+
+.letter-signature {
+  font-family: var(--font-secondary);
+  font-size: 1rem;
+  color: var(--white);
+  margin-top: 3rem;
+  padding-top: 2rem;
+  border-top: 1px solid rgba(30, 58, 138, 0.3);
+  text-align: right;
+}
+
+.signature-name {
+  font-family: var(--font-primary);
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--navy);
+  display: block;
+  margin-top: 0.5rem;
+}
+
+.signature-title {
+  font-family: var(--font-secondary);
+  font-size: 0.95rem;
+  font-style: italic;
+  color: rgba(255, 255, 255, 0.7);
+  display: block;
+  margin-top: 0.3rem;
+}
+
 .showcase-navigation {
   display: flex;
   justify-content: center;
@@ -827,6 +950,18 @@ body {
     font-size: 3rem;
   }
 
+  .apply-section .section-title {
+    font-size: 3.5rem;
+  }
+
+  .letter-section .section-title {
+    font-size: 3rem;
+  }
+
+  .letter-content {
+    padding: 2.5rem 3rem;
+  }
+
   .vogue-showcase {
     max-width: 1000px;
   }
@@ -856,6 +991,30 @@ body {
 
   .committees-preview .section-title {
     font-size: 2.8rem;
+  }
+
+  .apply-section .section-title {
+    font-size: 3rem;
+  }
+
+  .letter-section {
+    padding: 5rem 1.5rem;
+  }
+
+  .letter-section .section-title {
+    font-size: 2.5rem;
+  }
+
+  .letter-content {
+    padding: 2rem 2.5rem;
+  }
+
+  .letter-greeting {
+    font-size: 1.2rem;
+  }
+
+  .letter-paragraph {
+    font-size: 1rem;
   }
 
   .section-subtitle {
@@ -901,6 +1060,47 @@ body {
 
   .committees-preview .section-title {
     font-size: 2.5rem;
+  }
+
+  .apply-section .section-title {
+    font-size: 2.5rem;
+  }
+
+  .apply-section .section-subtitle {
+    font-size: 1rem;
+  }
+
+  .letter-section {
+    padding: 4rem 1rem;
+  }
+
+  .letter-section .section-title {
+    font-size: 2rem;
+  }
+
+  .letter-content {
+    padding: 1.5rem 2rem;
+  }
+
+  .letter-content::before {
+    font-size: 4rem;
+    top: 0.5rem;
+    left: 1rem;
+  }
+
+  .letter-greeting {
+    font-size: 1.1rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .letter-paragraph {
+    font-size: 0.95rem;
+    margin-bottom: 1.2rem;
+    text-align: left;
+  }
+
+  .letter-signature {
+    text-align: left;
   }
 
   .section-subtitle {
@@ -959,6 +1159,50 @@ body {
 
   .committees-preview .section-title {
     font-size: 2rem;
+  }
+
+  .apply-section .section-title {
+    font-size: 2rem;
+  }
+
+  .apply-section .section-subtitle {
+    font-size: 0.9rem;
+  }
+
+  .letter-section {
+    padding: 3rem 1rem;
+  }
+
+  .letter-section .section-title {
+    font-size: 1.8rem;
+  }
+
+  .letter-content {
+    padding: 1.2rem 1.5rem;
+  }
+
+  .letter-content::before {
+    font-size: 3rem;
+    top: 0.3rem;
+    left: 0.8rem;
+  }
+
+  .letter-greeting {
+    font-size: 1rem;
+    margin-bottom: 1rem;
+  }
+
+  .letter-paragraph {
+    font-size: 0.9rem;
+    margin-bottom: 1rem;
+  }
+
+  .signature-name {
+    font-size: 1.3rem;
+  }
+
+  .signature-title {
+    font-size: 0.85rem;
   }
 
   .section-subtitle {

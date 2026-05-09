@@ -487,12 +487,45 @@ const ApplySection = () => {
   );
 };
 
+const LetterFromSecretaryGeneral = () => {
+  return (
+    <section id="letter" className="letter-section">
+      <div className="container">
+        <h2 className="section-title">Letter from Secretary General</h2>
+        <div className="letter-content">
+          <div className="letter-text">
+            <p className="letter-greeting">Dear Distinguished Participants, Esteemed Guests,</p>
+            <p className="letter-paragraph">
+              It is my pleasure to welcome you all to the third version of CBALMUN'26 Model United Nations Conference. Which will be held on 16-18 June 2026. I'm truly honoured to assure you that our doors are wide open for every delegate who is eager to debate, collaborate, and create meaningful solutions for global issues. I acknowledge that Model United Nations is not only about debating but also about having meaningful friendships and gaining new perspectives on global challenges.
+            </p>
+            <p className="letter-paragraph">
+              The journey of CBALMUN'26 was a challenging one. Our academic and organization teams have worked tirelessly to ensure that this conference provides unforgettable experience. I sincerely hope that the debates you participate in, the friendships you build, and the memories you create here will inspire you long after the conference concludes.
+            </p>
+            <p className="letter-paragraph">
+              In this regard, your participation will be the most valuable part of this conference. I'm very pleased to invite everyone those who wish to develop themselves both academically and socially.
+            </p>
+            <p className="letter-paragraph">
+              On behalf of the entire secretariat team, I welcome you once again to CBALMUN'26. I wish you all fruitful debates, successful resolutions, and an enjoyable conference experience.
+            </p>
+            <p className="letter-signature">
+              Best Regards<br />
+              <span className="signature-name">Ayşe Erva Engin</span><br />
+              <span className="signature-title">Secretary-General of CBALMUN'26 Conference</span>
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+};
+
 const App = () => (
   <>
     <VogueCBALMUN />
     <TeamSection />
     <CommitteesPreview />
     <ConferenceDetails />
+    <LetterFromSecretaryGeneral />
     <ApplySection />
   </>
 );
