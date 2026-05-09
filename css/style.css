@@ -34,7 +34,7 @@ body {
   position: relative;
   width: 100%;
   min-height: 100vh;
-  background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url('../images/cagribeyal.jpg') no-repeat center center;
+  background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url('../images/okul.jpeg') no-repeat center center;
   background-size: cover;
   color: var(--white);
   overflow: hidden;
